@@ -8,91 +8,99 @@ function ServiceTable() {
   ];
 
   const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState({});
+  const [buttonDisabled, setButtonDisabled] = useState({});
   const [error, setError] = useState('');
 
-  // Simulate fetching services from an API
+  // Function to simulate fetching services
   const fetchServices = async () => {
     try {
-      // Simulating an API call failure
-      throw new Error('Network response was not ok');
-
-      // This is where the actual fetch call would go
-      // const response = await fetch('https://example.com/api/services');
-      // const data = await response.json();
-      // setServices(data);
-      // setError('');
-    } catch (error) {
-      console.error('Failed to fetch services:', error.message);
-      setServices(mockServices); // Fallback to mock data
-      setError('Failed to fetch services. Displaying mock data.'); // Display an error message
+      // Simulate fetching services from an API
+      throw new Error('Simulated fetch error');
+    } catch {
+      setError('Failed to fetch services. Displaying mock data.');
+      setServices(mockServices);
+      // Initially, all buttons are enabled
+      const initialButtonStates = mockServices.reduce((acc, service) => ({
+        ...acc,
+        [service.name]: false, // false means the button is not disabled
+      }), {});
+      setButtonDisabled(initialButtonStates);
     }
+  };
+
+  // Function to update service status (simulated)
+  const updateServiceStatus = async (serviceName, newStatus) => {
+    setButtonDisabled(prevState => ({ ...prevState, [serviceName]: true })); // Disable the button immediately when clicked
+    
+    // Simulate an API call to update service status
+    setTimeout(() => {
+      setServices(services.map(service => 
+        service.name === serviceName ? { ...service, status: newStatus } : service
+      ));
+      // Note: We do not re-enable the button here. It stays disabled until the refresh action.
+    }, 1000); // Simulating response time
+  };
+
+  // Handler for start/stop action
+  const handleServiceAction = (serviceName) => {
+    const service = services.find(service => service.name === serviceName);
+    const newStatus = service.status === 'Running' ? 'Stopped' : 'Running';
+    updateServiceStatus(serviceName, newStatus);
+  };
+
+  // Refresh handler: re-enable all buttons
+  const refreshButtons = () => {
+    const resetButtonStates = Object.keys(buttonDisabled).reduce((acc, key) => ({
+      ...acc,
+      [key]: false, // false means the button is not disabled
+    }), {});
+    setButtonDisabled(resetButtonStates);
   };
 
   useEffect(() => {
     fetchServices();
   }, []);
 
-  const updateServiceStatus = async (serviceName, action) => {
-    setLoading((prev) => ({ ...prev, [serviceName]: true }));
-
-    try {
-      // Here you'd make an actual API call to update the service status
-      // For now, we simulate an API response after a delay
-      setTimeout(() => {
-        const updatedStatus = action === 'start' ? 'Running' : 'Stopped';
-        setServices((prevServices) =>
-          prevServices.map((service) =>
-            service.name === serviceName ? { ...service, status: updatedStatus } : service
-          )
-        );
-        setLoading((prev) => ({ ...prev, [serviceName]: false }));
-      }, 1000);
-    } catch (error) {
-      console.error('Error updating service status:', error);
-      setLoading((prev) => ({ ...prev, [serviceName]: false }));
-    }
-  };
-
   return (
     <div>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-      <button onClick={fetchServices} style={{ marginBottom: '10px', backgroundColor: '#4CAF50', color: 'white', padding: '10px 24px', borderRadius: '5px', cursor: 'pointer' }}>Refresh Services</button>
-      <div className="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Service Name</th>
-              <th>Status</th>
-              <th>Action</th>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <button onClick={refreshButtons} style={{ margin: '10px', padding: '10px', backgroundColor: 'lightgray' }}>
+        Refresh
+      </button>
+      <table>
+        <thead>
+          <tr>
+            <th>Service Name</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {services.map(({ name, status }) => (
+            <tr key={name}>
+              <td>{name}</td>
+              <td style={{ backgroundColor: status === 'Running' ? '#d4edda' : '#f8d7da' }}>{status}</td>
+              <td>
+                <button
+                  onClick={() => handleServiceAction(name)}
+                  disabled={buttonDisabled[name]}
+                  style={{
+                    backgroundColor: buttonDisabled[name] ? '#cccccc' : (status === 'Running' ? '#f44336' : '#4CAF50'),
+                    color: 'white',
+                    cursor: buttonDisabled[name] ? 'default' : 'pointer',
+                    opacity: buttonDisabled[name] ? 0.5 : 1,
+                    border: 'none',
+                    padding: '5px 10px',
+                    borderRadius: '5px',
+                  }}
+                >
+                  {status === 'Running' ? 'Stop' : 'Start'}
+                </button>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {services.map((service) => (
-              <tr key={service.name}>
-                <td>{service.name}</td>
-                <td>{service.status}</td>
-                <td>
-                  <button
-                    disabled={loading[service.name]}
-                    onClick={() => updateServiceStatus(service.name, service.status === 'Running' ? 'stop' : 'start')}
-                    style={{
-                      backgroundColor: service.status === 'Running' ? '#f44336' : '#4CAF50',
-                      color: 'white',
-                      cursor: 'pointer',
-                      padding: '5px 10px',
-                      borderRadius: '5px',
-                      opacity: loading[service.name] ? 0.5 : 1,
-                    }}
-                  >
-                    {loading[service.name] ? 'Processing...' : service.status === 'Running' ? 'Stop' : 'Start'}
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

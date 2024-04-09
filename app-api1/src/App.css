@@ -75,6 +75,7 @@
 }
 
 table {
+  color: black;
   width: 100%;
   border-collapse: collapse;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
