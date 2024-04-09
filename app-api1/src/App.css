@@ -1,0 +1,130 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* Base button styles */
+.glowing-button {
+  border: none;
+  outline: none;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+/* Glowing effect */
+.glowing-button.start {
+  background-color: green;
+  box-shadow: 0 0 5px #58D68D, 0 0 10px #58D68D, 0 0 20px #58D68D, 0 0 40px #58D68D;
+}
+
+.glowing-button.stop {
+  background-color: red;
+  box-shadow: 0 0 5px #EC7063, 0 0 10px #EC7063, 0 0 20px #EC7063, 0 0 40px #EC7063;
+}
+
+/* Hover state to intensify the glow */
+.glowing-button:hover {
+  box-shadow: 0 0 10px #58D68D, 0 0 20px #58D68D, 0 0 30px #58D68D, 0 0 50px #58D68D, 0 0 70px #58D68D;
+}
+
+
+.table-container {
+  color: black;
+  margin: 20px auto;
+  overflow-x: auto;
+  font-family: monospace;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff; /* Ensure this is light for contrast with dark text */
+}
+
+th, td {
+  text-align: left;
+  padding: 12px 15px;
+  border-bottom: 1px solid #dddddd;
+}
+
+th {
+  background-color: #f4f4f4; /* Light grey, ensuring contrast */
+  color: #333; /* Dark grey or black for text */
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9; /* Very light grey for every other row */
+}
+
+tr:hover {
+  background-color: #efefef; /* Slightly darker grey for hover */
+}
+
+/* Updated button styles for visibility and interaction */
+.glowing-button {
+  border: none;
+  outline: none;
+  color: #fff; /* White text on colored buttons for contrast */
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.glowing-button.start {
+  background-color: #4CAF50; /* Green, ensuring white text stands out */
+}
+
+.glowing-button.stop {
+  background-color: #f44336; /* Red, also ensuring white text is readable */
+}
+
+.glowing-button:hover {
+  opacity: 0.8; /* Slight transparency on hover for feedback */
+}
+
+.glowing-button.loading {
+  background-color: #FFA500; /* Change to your desired loading color */
+  transition: background-color
+}
